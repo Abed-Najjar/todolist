@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>My Day Tasks</title>{% endblock %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
+    <style>
+        body {
+            background-color: #161616; /* Set background color for the body */
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            background-color: #212121;
+            padding-top: 56px; /* Adjust for the height of the navbar */
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: inherit;
+            background-color: #171717;
+            border-bottom: 1px solid #424242;
+        }
+        .nav-link {
+            padding: 0.75rem 1.25rem;
+            color: #fff;
+        }
+        .nav-link:hover {
+            background-color: #424242;
+        }
+        .main-content {
+            margin-left: 250px; /* Adjust for the width of the sidebar */
+            margin-top: 75px;
+            transition: all 0.3s;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0; /* Reset margin when sidebar is hidden */
+        }
+        /* Custom styling for checkboxes */
+        input[type="checkbox"] {
+            -webkit-appearance: none; /* Remove default checkbox appearance */
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid #fff; /* Add border around the checkbox */
+            width: 20px; /* Set width and height for the checkbox */
+            height: 20px;
+            border-radius: 50%; /* Make the checkbox a circle */
+            outline: none; /* Remove outline when focused */
+            cursor: pointer; /* Show pointer cursor on hover */
+            transition: border-color 0.3s ease-in-out; /* Add transition for smooth hover effect */
+            margin-right: 10px; /* Add space between checkbox and label */
+        }
+        /* Custom styling for checked checkboxes */
+        input[type="checkbox"]:checked {
+            background-color: #fff; /* Set background color when checked */
+        }
+        /* Add line over task name when checkbox is checked */
+        input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body class="text-light">
+
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand mx-auto" href="#">My Day Tasks</a>
+    </nav>
+
+    <div class="col-md-2 sidebar">
+        <div class="sidebar-heading">My Day</div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'myday' %}">My Day</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'important' %}">Important</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tasks' %}">Tasks</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 main-content" id="main-content">
+                <h5>My Day</h5>
+                <table class="table table-dark">
+                    <tbody>
+                        {% for task in today_tasks %}
+                        <tr>
+                            <td><input type="checkbox" {% if task.Status %}checked{% endif %}><label style="margin-left: 10px;">{{ task.TName }}</label></td>
+                            <td>{{ task.due_at }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% if today_tasks.count == 0 %}
+                        <tr>
+                            <td colspan="2">No tasks for today</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

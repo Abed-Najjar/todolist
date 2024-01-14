@@ -1,0 +1,23 @@
+{% extends 'bootstrap.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1 class="text-white">Login</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form|crispy }}
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button> <a class="btn btn-primary" href="{% url 'signup' %}">Sign Up</a>
+    </form>
+</div>
+
+{% endblock %}
