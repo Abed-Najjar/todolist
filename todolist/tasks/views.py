@@ -27,9 +27,10 @@ def login(request):
         if form.is_valid():
             email = request.POST['UEmail']
             password = request.POST['UPassword']
-            user = User.objects.get(UEmail=email)
-            if User.objects.filter(UEmail=email).exists() and user.UEmail == email and user.UPassword == password:
-                return render(request, "home.html")
+            user = User.objects.filter(UEmail=email, UPassword=password).first()
+            if user:
+                request.session['UserID'] = user.UserID  # Store UserID in session
+                return redirect('myday')  # Redirect to 'myday' page
             else:
                 messages.error(request, 'Username or Password incorrect')
 
@@ -41,21 +42,46 @@ def home(request):
 
 
 def myday(request):
-    today_tasks = Task.objects.filter(created_at=date.today(), UserID=3)    #add session value
-    tasks_page = TaskForm()
-    print(today_tasks)  # Print to console for debugging
-    return render(request, "myday.html", {'today_tasks': today_tasks, 'tasks_page': tasks_page})
+    user_id = request.session.get('UserID')
+    if user_id:
+        today_tasks = Task.objects.filter(created_at=date.today(), UserID=user_id)
+        tasks_page = TaskForm()
+        return render(request, "myday.html", {'today_tasks': today_tasks, 'tasks_page': tasks_page})
+    else:
+        return HttpResponse('User not logged in')
 
 
 def tasks(request):
-    all_tasks = Task.objects.filter(UserID=2)   #add session value
-    print(all_tasks)  # Print to console for debugging
-    return render(request, "tasks.html", {'all_tasks': all_tasks})
+    user_id = request.session.get('UserID')
+    if user_id:
+        all_tasks = Task.objects.filter(UserID=user_id)
+        return render(request, "tasks.html", {'all_tasks': all_tasks})
+    else:
+        # Handle the case when the user is not logged in
+        return redirect('login')
 
 
 def important(request):
-    important_tasks = Task.objects.filter(Priority="High")
-    print(important_tasks)  # Print to console for debugging
-    return render(request, "important.html", {'important_tasks': important_tasks})
+    user_id = request.session.get('UserID')
+    if user_id:
+        important_tasks = Task.objects.filter(UserID=user_id, Priority="High")
+        return render(request, "important.html", {'important_tasks': important_tasks})
+    else:
+        # Handle the case when the user is not logged in
+        return redirect('login')
+
+
+def add_task(request):
+    form = TaskForm()
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            new_task = form
+            new_task.save()
+            return render(request, "myday.html", {'form': form})
+
+    return render(request, "add_task.html", {'form': form})
+
+
 
 

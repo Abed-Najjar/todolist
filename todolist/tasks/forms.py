@@ -14,7 +14,6 @@ class LoginForm(forms.Form):
     )
 
 
-
 class TaskForm(ModelForm):
     class Meta:
         model = Task

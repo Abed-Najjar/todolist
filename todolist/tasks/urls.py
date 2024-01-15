@@ -8,6 +8,7 @@ urlpatterns = [
     path('myday/', views.myday, name='myday'),
     path('tasks/', views.tasks, name='tasks'),
     path('important/', views.important, name='important'),
+    path('add-task/', views.add_task, name='add_task'),
 
 
 

@@ -35,6 +35,7 @@
         .nav-link:hover {
             background-color: #424242;
         }
+
         .main-content {
             margin-left: 250px; /* Adjust for the width of the sidebar */
             margin-top: 75px;
@@ -69,12 +70,13 @@
 </head>
 <body class="text-light">
 
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand mx-auto" href="#">My Day Tasks</a>
+    <nav class="navbar navbar-dark bg-dark fixed-top justify-content-center">
+        <input class="bg-dark col-md-3 form-control" type="search" placeholder="Search" aria-label="Search" name="q">
+        <div style="margin-left: 30px;"><a href="{% url 'add_task' %}" class="btn btn-outline-primary" type="submit">Add Task</a></div>
     </nav>
 
     <div class="sidebar">
-        <div class="sidebar-heading">My Day</div>
+        <div class="sidebar-heading">Tasks</div>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'myday' %}">My Day</a>
@@ -91,8 +93,10 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 main-content" id="main-content">
-                <h5>My Day</h5>
+            <div class="col-md-8 main-content" id="main-content">
+
+
+
                 <table class="table table-dark">
                     <tbody>
                         {% for task in all_tasks %}
